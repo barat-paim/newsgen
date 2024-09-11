@@ -73,3 +73,13 @@ To set up the project environment:
 ## License
 
 [Add license information here]
+
+## Running the Project
+1. Start the backend server (from the backend directory):
+   ```
+   python src/app.py
+   ```
+2. Start the frontend development server (from the frontend directory):
+   ```
+   npm start
+   ```
