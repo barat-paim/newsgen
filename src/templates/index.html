@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Yorker Style Cartoon Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>New Yorker Style Cartoon Generator</h1>
+    <form id="cartoon-form">
+        <textarea id="article-text" rows="10" cols="50" placeholder="Enter your article text here..."></textarea>
+        <br>
+        <button type="submit">Generate Cartoon</button>
+    </form>
+    <div id="result">
+        <img id="cartoon-image" style="display: none;">
+        <p id="concept"></p>
+        <p id="prompt"></p>
+    </div>
+
+    <script>
+        document.getElementById('cartoon-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const articleText = document.getElementById('article-text').value;
+            axios.post('/', { article_text: articleText })
+                .then(function (response) {
+                    document.getElementById('cartoon-image').src = response.data.image_url;
+                    document.getElementById('cartoon-image').style.display = 'block';
+                    document.getElementById('concept').textContent = 'Concept: ' + response.data.concept;
+                    document.getElementById('prompt').textContent = 'Prompt: ' + response.data.prompt;
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>

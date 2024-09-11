@@ -4,6 +4,39 @@ This project generates New Yorker style cartoons based on article inputs using t
 
 ## Setup
 
+## Features
+
+- Generates New Yorker style cartoons based on article text inputs
+- Uses OpenAI's DALL-E 3 API for image generation
+- Extracts key concepts from the input article to create relevant cartoon prompts
+- Provides a user-friendly command-line interface
+
+## Requirements
+
+- Python 3.x
+- OpenAI API key
+
+## Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/new-yorker-cartoon-generator.git
+   cd new-yorker-cartoon-generator
+   ```
+
+2. Install the required packages:
+   ```
+   pip install -r requirements.txt
+   ```
+
+3. Set up your OpenAI API key:
+   - Create a `.env` file in the project root
+   - Add your API key to the file:
+     ```
+     OPENAI_API_KEY=your_api_key_here
+     ```
+
+
 To set up the project environment:
 
 1. Ensure you have Python 3.x installed.
