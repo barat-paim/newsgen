@@ -7,3 +7,4 @@ imagegen_env/
 __pycache__/
 *.pyc
 node_modules/
+articles/
