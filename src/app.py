@@ -1,19 +1,25 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from image_generator_2 import generate_cartoon  
-import os
+from image_generator import generate_cartoon
 import logging
-
-app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000", "supports_credentials": True}})
+import os
+# Create Flask app and set up CORS
+app = Flask(__name__, static_folder='../frontend/build')
+CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000"]}})
 
 logging.basicConfig(level=logging.DEBUG)
 
-@app.route('/')
-def index():
-    return send_from_directory(app.static_folder, 'index.html')
+# Serve the frontend build (React app)
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
-@app.route('/api/generate_cartoon', methods=['GET', 'POST', 'OPTIONS'])
+# API route for generating cartoons
+@app.route('/api/generate_cartoon', methods=['POST', 'OPTIONS'])
 def generate_cartoon_route():
     app.logger.debug(f"Received {request.method} request to /api/generate_cartoon")
     app.logger.debug(f"Request headers: {request.headers}")
@@ -21,42 +27,33 @@ def generate_cartoon_route():
 
     if request.method == 'OPTIONS':
         # Handles preflight requests
-        headers = {
-            'Access-Control-Allow-Origin': 'http://localhost:3000',
-            'Access-Control-Allow-Methods': 'GET, POST',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Max-Age': '3600'
-        }
-        return ('', 204, headers)
+        return ('', 204)
 
-    if request.method == 'GET':
-        # Handle GET request (for testing purposes)
-        return jsonify({"message": "GET request received. Use POST to generate a cartoon."}), 200
-
-    # POST request handling
+    # POST request handling to generate cartoons
     try:
-        article_text = request.json['article_text']
+        article_text = request.json.get('article_text', '')
+        if not article_text:
+            return jsonify({"error": "No article text provided"}), 400
+
+        # Call the generate_cartoon function from image_generator.py
         result = generate_cartoon(article_text)
         app.logger.debug(f"Generated result: {result}")
-        response = jsonify(result)
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-        response.headers.add('Access-Control-Allow-Credentials', 'true')
-        return response
+        return jsonify(result)
     except Exception as e:
         app.logger.error(f"Error generating cartoon: {str(e)}")
-        error_response = jsonify({"error": str(e)})
-        error_response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-        error_response.headers.add('Access-Control-Allow-Credentials', 'true')
-        return error_response, 500
+        return jsonify({"error": str(e)}), 500
 
+# CORS configuration for frontend access
+@app.after_request
+def after_request(response):
+    origin = request.headers.get('Origin')
+    if origin in ["http://localhost:3000", "http://127.0.0.1:3000"]:
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
+
+# Run the Flask app
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-# changes made: version 2
-# 1. added static_folder and static_url_path to the Flask app initialization
-# 2. modified the index route to serve the index.html file from the frontend build directory
-# 3. added a new route for generating cartoons
-# 4. updated the package.json file to include the necessary resolutions for serve-static and send

@@ -125,24 +125,6 @@ def refine_concept_for_humor(concept: str) -> str:
         logger.error(f"Error refining concept for humor: {str(e)}")
         return concept  # Return the original if an error occurs
 
-def generate_caption(refined_concept: str) -> str:
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "Generate a brief, witty caption for a New Yorker style cartoon based on this concept. The caption should be no more than 15 words."},
-                {"role": "user", "content": refined_concept}
-            ],
-            max_tokens=30,
-            temperature=0.7,
-        )
-        caption = response.choices[0].message.content.strip()
-        logger.debug(f"Generated caption: {caption}")
-        return caption
-    except Exception as e:
-        logger.error(f"Error generating caption: {str(e)}")
-        return "Caption generation failed"
-
 def generate_cartoon(text: str) -> dict:
     try:
         logger.debug(f"Generating cartoon for text: {text[:100]}...")
@@ -157,12 +139,11 @@ def generate_cartoon(text: str) -> dict:
         logger.debug(f"Generated prompt: {prompt}")
         
         image_response = generate_image(prompt)
-        caption = generate_caption(refined_concept)
-        
         if image_response:
             return {
                 "image_url": image_response['url'],
-                "caption": caption
+                "concept": refined_concept,
+                "prompt": prompt
             }
         else:
             logger.error("Failed to generate image")
