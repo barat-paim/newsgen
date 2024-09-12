@@ -1,4 +1,9 @@
 {
+  "name": "paim-1-newsgen,
+  "version": "1.0.0",
+  "engines": {
+    "node": "14.x"
+  },
   "dependencies": {
     "ansi-html": "^0.0.9",
     "axios": "^1.7.7",
