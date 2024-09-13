@@ -1,0 +1,23 @@
+# Exported from Render on 2024-09-13T19:25:23Z
+services:
+- type: web
+  name: newsgen
+  runtime: python
+  repo: https://github.com/barat-paim/newsgen
+  plan: free
+  envVars:
+  - key: REACT_APP_API_URL
+    sync: false
+  - key: FLASH_ENV
+    sync: false
+  - key: OPENAI_API_KEY
+    sync: false
+  - key: NODE_ENV
+    sync: false
+  - key: CI
+    sync: false
+  region: oregon
+  buildCommand: '   npm ci && cd frontend && npm ci && npm run build && cd .. && pip
+    install -r requirements.txt'
+  startCommand: gunicorn --chdir src app:app
+version: "1"
