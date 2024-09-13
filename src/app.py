@@ -3,11 +3,18 @@ from flask_cors import CORS
 from image_generator import generate_cartoon
 import logging
 import os
+
 # Create Flask app and set up CORS
 app = Flask(__name__, static_folder='../frontend/build')
-CORS(app)
 
-logging.basicConfig(level=logging.DEBUG)
+# Update CORS configuration
+CORS(app, resources={r"/api/*": {"origins": ["https://newsgen.onrender.com"]}})
+
+# Set up logging
+if os.environ.get('FLASK_ENV') == 'production':
+    logging.basicConfig(level=logging.ERROR)
+else:
+    logging.basicConfig(level=logging.DEBUG)
 
 # Serve the frontend build (React app)
 @app.route('/', defaults={'path': ''})
@@ -21,10 +28,6 @@ def serve(path):
 # API route for generating cartoons
 @app.route('/api/generate_cartoon', methods=['POST', 'OPTIONS'])
 def generate_cartoon_route():
-    app.logger.debug(f"Received {request.method} request to /api/generate_cartoon")
-    app.logger.debug(f"Request headers: {request.headers}")
-    app.logger.debug(f"Request body: {request.get_data()}")
-
     if request.method == 'OPTIONS':
         # Handles preflight requests
         return ('', 204)
@@ -37,23 +40,15 @@ def generate_cartoon_route():
 
         # Call the generate_cartoon function from image_generator.py
         result = generate_cartoon(article_text)
-        app.logger.debug(f"Generated result: {result}")
         return jsonify(result)
     except Exception as e:
         app.logger.error(f"Error generating cartoon: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "An error occurred while generating the cartoon"}), 500
 
-# CORS configuration for frontend access
-@app.after_request
-def after_request(response):
-    origin = request.headers.get('Origin')
-    if origin in ["http://localhost:3000", "http://127.0.0.1:3000"]:
-        response.headers.add('Access-Control-Allow-Origin', origin)
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-        response.headers.add('Access-Control-Allow-Credentials', 'true')
-    return response
+# Remove the after_request function as CORS is now handled by the Flask-CORS extension
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Use environment variable to determine if we're in production
+    is_production = os.environ.get('FLASK_ENV') == 'production'
+    app.run(debug=not is_production)

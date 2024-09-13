@@ -11,21 +11,21 @@
 #Feed Final Prompt into DALL-E to Generate Cartoon
 
 # necessary imports, libraries, and dependencies    
-from openai import OpenAI
 import os
-from dotenv import load_dotenv
 import random
 import logging
+from openai import OpenAI
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Load environment variables
-load_dotenv()
-
 # Set up OpenAI API key
-client = OpenAI()  # This will automatically use the OPENAI_API_KEY from your environment
+openai_api_key = os.getenv('OPENAI_API_KEY')
+if not openai_api_key:
+    raise ValueError("No OpenAI API key found in environment variables")
+
+client = OpenAI(api_key=openai_api_key)
 
 # generate_image_prompt() -> str: generates an image prompt based on a refined concept
 def generate_image_prompt(refined_concept: str) -> str:
