@@ -37,24 +37,23 @@ const NewsFunApp = () => {
   const generateCartoon = async () => {
     setIsLoading(true);
     setError('');
-    setCartoon(''); // Reset cartoon image when generating a new one
-    setConcept(''); // Reset concept when generating a new one
-    setLoadingMessage(''); // Clear any previous loading message
+    setCartoon('');
+    setConcept('');
+    setLoadingMessage('');
 
     try {
       console.log('Sending request to generate cartoon');
-      const response = await axios.post('http://localhost:5000/api/generate_cartoon', 
+      const response = await axios.post('/api/generate_cartoon', 
         { article_text: articleText },
         { 
           headers: {
             'Content-Type': 'application/json',
-          },
-          withCredentials: true
+          }
         }
       );
       console.log('API response:', response.data);
-      setCartoon(response.data.image_url); // Set the cartoon image URL
-      setConcept(response.data.caption); // Assuming the backend returns a caption
+      setCartoon(response.data.image_url);
+      setConcept(response.data.caption);
       
     } catch (err) {
       console.error('Error generating cartoon:', err);

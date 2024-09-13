@@ -7,8 +7,8 @@ import os
 # Create Flask app and set up CORS
 app = Flask(__name__, static_folder='../frontend/build')
 
-# Update CORS configuration
-CORS(app, resources={r"/api/*": {"origins": ["https://newsgen.onrender.com"]}})
+# Set up CORS for all routes
+CORS(app)
 
 # Set up logging
 if os.environ.get('FLASK_ENV') == 'production':
@@ -44,8 +44,6 @@ def generate_cartoon_route():
     except Exception as e:
         app.logger.error(f"Error generating cartoon: {str(e)}")
         return jsonify({"error": "An error occurred while generating the cartoon"}), 500
-
-# Remove the after_request function as CORS is now handled by the Flask-CORS extension
 
 # Run the Flask app
 if __name__ == '__main__':
