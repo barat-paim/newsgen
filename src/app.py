@@ -5,7 +5,7 @@ import logging
 import os
 # Create Flask app and set up CORS
 app = Flask(__name__, static_folder='../frontend/build')
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000"]}})
+CORS(app)
 
 logging.basicConfig(level=logging.DEBUG)
 

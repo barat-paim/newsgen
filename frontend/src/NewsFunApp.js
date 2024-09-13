@@ -10,13 +10,13 @@ const NewsFunApp = () => {
   const [concept, setConcept] = useState('');
   const [loadingMessage, setLoadingMessage] = useState('');
 
-  const loadingMessages = [
-    "Putting our best cartoonist to work...",
-    "Generating cartoon...",
-    "Our chief editor approves.."
-  ];
-
   useEffect(() => {
+    const loadingMessages = [
+      "Putting our best cartoonist to work...",
+      "Generating cartoon...",
+      "Our chief editor approves.."
+    ];
+
     const timeouts = [];
     if (isLoading) {
       loadingMessages.forEach((message, index) => {
@@ -32,11 +32,15 @@ const NewsFunApp = () => {
     return () => {
       timeouts.forEach(clearTimeout);
     };
-  }, [isLoading, loadingMessages]); // Added loadingMessages to the dependency array
+  }, [isLoading]); // Removed loadingMessages from the dependency array
 
   const generateCartoon = async () => {
     setIsLoading(true);
     setError('');
+    setCartoon(''); // Reset cartoon image when generating a new one
+    setConcept(''); // Reset concept when generating a new one
+    setLoadingMessage(''); // Clear any previous loading message
+
     try {
       console.log('Sending request to generate cartoon');
       const response = await axios.post('http://localhost:5000/api/generate_cartoon', 
@@ -49,10 +53,8 @@ const NewsFunApp = () => {
         }
       );
       console.log('API response:', response.data);
-      // This shows the cartoon image in the browser 
       setCartoon(response.data.image_url); // Set the cartoon image URL
-      // Assuming the backend returns a caption
-      setConcept(response.data.caption);
+      setConcept(response.data.caption); // Assuming the backend returns a caption
       
     } catch (err) {
       console.error('Error generating cartoon:', err);
@@ -104,7 +106,6 @@ const NewsFunApp = () => {
             )}
           </div>
           {concept && <p className="mt-2"><strong>Caption:</strong> {concept}</p>}
-          {prompt && <p className="mt-2"><strong>Prompt:</strong> {prompt}</p>}
           <div className="flex justify-between items-center mt-4">
             <div className="flex space-x-2">
               <ThumbsUp className="cursor-pointer" />
