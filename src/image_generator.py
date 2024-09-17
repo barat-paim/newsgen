@@ -12,21 +12,12 @@ from dotenv import load_dotenv # for local testing
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Set up OpenAI API key for local testing
-load_dotenv()
+# Set up OpenAI API key for production
 openai_api_key = os.getenv('OPENAI_API_KEY')
 if not openai_api_key:
     raise ValueError("No OpenAI API key found in environment variables")
 
-client = OpenAI()
-
-
-# Set up OpenAI API key for production
-#openai_api_key = os.getenv('OPENAI_API_KEY')
-#if not openai_api_key:
- #   raise ValueError("No OpenAI API key found in environment variables")
-
-#client = OpenAI(api_key=openai_api_key)
+client = OpenAI(api_key=openai_api_key)
 
 # Generate image prompt
 def generate_image_prompt(refined_concept: str) -> str:
