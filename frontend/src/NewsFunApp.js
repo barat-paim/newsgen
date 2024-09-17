@@ -52,9 +52,12 @@ const NewsFunApp = () => {
         }
       );
       console.log('API response:', response.data);
-      setCartoon(response.data.image_url);
-      setConcept(response.data.caption);
-      
+      if (response.data.image_url) {
+        setCartoon(response.data.image_url);
+        setConcept(response.data.caption);
+      } else {
+        setError('Failed to generate cartoon. Please try again.');
+      }
     } catch (err) {
       console.error('Error generating cartoon:', err);
       setError('Failed to generate cartoon. Please try again.');

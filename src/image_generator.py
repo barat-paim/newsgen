@@ -184,8 +184,9 @@ def generate_cartoon(text: str) -> dict:
             # Add caption to the image
             add_caption_to_image(image_url, caption, output_path)
             
+            # Instead of returning a local path, return the URL
             return {
-                "image_path": output_path,
+                "image_url": image_url,
                 "caption": caption
             }
         else:
