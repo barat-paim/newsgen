@@ -1,11 +1,35 @@
-imagegen_env/
+# Environment variables
 .env
+
+# Python virtual environment
+imagegen_env/
+venv/
+env/
+
+# Python cache files
 __pycache__/
 *.pyc
-imagegen_env/
-.env
-__pycache__/
-*.pyc
+*.pyo
+*.pyd
+
+# Generated image files
+final_cartoon.png
+*.png
+
+# Log files
+*.log
+
+# Node modules
 node_modules/
-articles/
-.DS Store
+
+# Build directories
+build/
+dist/
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db

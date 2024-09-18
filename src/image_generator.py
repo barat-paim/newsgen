@@ -87,7 +87,7 @@ def generate_concept_and_caption(text: str):
                     "content": (
                         "You are a creative writer for cartoons. Read the following article and perform the following steps:\n"
                         "1. Extract a key cartoon concept from the article, focusing on themes that can be satirized or visualized in a cartoon.\n"
-                        "2. Refine the concept to make it witty, satirical, and appropriate for a single-panel New Yorker cartoon.\n"
+                        "2. Refine the concept to make it witty, satirical, and appropriate for a single-panel white background minimalistic New Yorker cartoon. no text in the image.\n"
                         "3. Generate a brief, witty caption for the cartoon, no more than 15 words.\n"
                         "Provide your response in the following format:\n"
                         "Concept: <extracted concept>\n"

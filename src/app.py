@@ -50,6 +50,11 @@ def generate_cartoon_route():
         app.logger.error(f"Error generating cartoon: {str(e)}")
         return jsonify({"error": "An error occurred while generating the cartoon"}), 500
 
+# Route to serve images
+@app.route('/images/<path:filename>')
+def serve_image(filename):
+    return send_from_directory(os.path.dirname(__file__), filename)
+
 # Run the Flask app
 if __name__ == '__main__':
     # Use environment variable to determine if we're in production
