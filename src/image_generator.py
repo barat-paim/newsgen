@@ -154,6 +154,9 @@ def add_caption_to_image(image_url: str, caption: str, output_path: str):
         
         draw = ImageDraw.Draw(new_image)
         
+        with current_app.app_context():
+            font_path = os.path.join(current_app.root_path, 'assets', 'fonts', 'CaslonItalic.ttf')
+        
         try:
             font = ImageFont.truetype(font_path, size=int(new_height * 0.03))  # Adjust size as needed
             logger.debug(f"Loaded Caslon Italic font from {font_path}")
@@ -196,7 +199,9 @@ def generate_cartoon(text: str) -> dict:
         if image_response:
             original_image_url = image_response['url']
             filename = f"final_cartoon_{int(time.time())}.png"
-            output_path = os.path.join(current_app.root_path, 'static', 'images', filename)
+            
+            with current_app.app_context():
+                output_path = os.path.join(current_app.root_path, 'static', 'images', filename)
             
             # Add caption to the image
             add_caption_to_image(original_image_url, caption, output_path)
