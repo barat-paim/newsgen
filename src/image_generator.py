@@ -6,7 +6,7 @@ from openai import OpenAI
 from PIL import Image, ImageDraw, ImageFont
 import requests
 from io import BytesIO
-from dotenv import load_dotenv # for local testing
+import time
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -129,33 +129,49 @@ def generate_concept_and_caption(text: str):
         return "", "", "Caption generation failed"
 
 # Function to add text overlay to the image
+
+
+logger = logging.getLogger(__name__)
+
+font_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'fonts', 'CaslonItalic.ttf')
+
 def add_caption_to_image(image_url: str, caption: str, output_path: str):
     try:
         # Download the image
         response = requests.get(image_url)
-        image = Image.open(BytesIO(response.content))
+        original_image = Image.open(BytesIO(response.content))
         
-        draw = ImageDraw.Draw(image)
-        # Choose a font and size (ensure the font file is available)
-        font = ImageFont.load_default()
+        # Create a new white background image
+        new_width = int(original_image.width * 1.1)  # 10% wider
+        new_height = int(original_image.height * 1.2)  # 20% taller
+        new_image = Image.new('RGB', (new_width, new_height), 'white')
+        
+        # Paste the original image onto the new image, centered horizontally and towards the top
+        paste_x = (new_width - original_image.width) // 2
+        paste_y = int(new_height * 0.05)  # 5% from the top
+        new_image.paste(original_image, (paste_x, paste_y))
+        
+        draw = ImageDraw.Draw(new_image)
+        
+        try:
+            font = ImageFont.truetype(font_path, size=int(new_height * 0.03))  # Adjust size as needed
+            logger.debug(f"Loaded Caslon Italic font from {font_path}")
+        except IOError:
+            logger.warning(f"Caslon Italic font not found at {font_path}. Using default font.")
+            font = ImageFont.load_default()
         
         # Calculate text size and position
-        text_width, text_height = draw.textsize(caption, font=font)
-        image_width, image_height = image.size
-        x = (image_width - text_width) / 2
-        y = image_height - text_height - 10  # 10 pixels from the bottom
-        
-        # Add a white rectangle behind the text for better visibility
-        draw.rectangle(
-            [x - 5, y - 5, x + text_width + 5, y + text_height + 5],
-            fill="white"
-        )
+        text_bbox = draw.textbbox((0, 0), f'"{caption}"', font=font)
+        text_width = text_bbox[2] - text_bbox[0]
+        text_height = text_bbox[3] - text_bbox[1]
+        x = (new_width - text_width) / 2
+        y = new_height - text_height - int(new_height * 0.05)  # 5% from the bottom
         
         # Add text to image
-        draw.text((x, y), caption, font=font, fill="black")
+        draw.text((x, y), f'"{caption}"', font=font, fill=(0, 0, 0, 255))
         
         # Save the edited image
-        image.save(output_path)
+        new_image.save(output_path)
         logger.debug(f"Image saved with caption at: {output_path}")
     except Exception as e:
         logger.error(f"Error adding caption to image: {str(e)}")
@@ -178,15 +194,15 @@ def generate_cartoon(text: str) -> dict:
         image_response = generate_image(prompt)
         
         if image_response:
-            image_url = image_response['url']
-            output_path = "final_cartoon.png"
+            original_image_url = image_response['url']
+            output_path = os.path.join(os.path.dirname(__file__), 'static', 'images', f"final_cartoon_{int(time.time())}.png")
             
             # Add caption to the image
-            add_caption_to_image(image_url, caption, output_path)
+            add_caption_to_image(original_image_url, caption, output_path)
             
             # Instead of returning a local path, return the URL
             return {
-                "image_url": image_url,
+                "image_url": image_response['url'],
                 "caption": caption
             }
         else:

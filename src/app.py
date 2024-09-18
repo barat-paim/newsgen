@@ -53,7 +53,7 @@ def generate_cartoon_route():
 # Route to serve images
 @app.route('/images/<path:filename>')
 def serve_image(filename):
-    return send_from_directory(os.path.dirname(__file__), filename)
+    return send_from_directory(os.path.join(os.path.dirname(__file__), 'static', 'images'), filename)
 
 # Run the Flask app
 if __name__ == '__main__':
