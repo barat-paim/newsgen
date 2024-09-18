@@ -181,7 +181,6 @@ def generate_cartoon(text: str) -> dict:
     try:
         logger.debug(f"Generating cartoon for text: {text[:100]}...")
         
-        # Combine steps to reduce API calls
         concept, refined_concept, caption = generate_concept_and_caption(text)
         
         if not refined_concept:
@@ -195,14 +194,15 @@ def generate_cartoon(text: str) -> dict:
         
         if image_response:
             original_image_url = image_response['url']
-            output_path = os.path.join(os.path.dirname(__file__), 'static', 'images', f"final_cartoon_{int(time.time())}.png")
+            filename = f"final_cartoon_{int(time.time())}.png"
+            output_path = os.path.join(os.path.dirname(__file__), 'static', 'images', filename)
             
             # Add caption to the image
             add_caption_to_image(original_image_url, caption, output_path)
             
-            # Instead of returning a local path, return the URL
+            # Return the URL path for the saved image
             return {
-                "image_url": image_response['url'],
+                "image_url": f"/images/{filename}",
                 "caption": caption
             }
         else:

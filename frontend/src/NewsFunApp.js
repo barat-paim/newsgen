@@ -58,9 +58,8 @@ const NewsFunApp = () => {
       if (response.data.error) {
         setError(response.data.error);
       } else if (response.data.image_url) {
-        // Construct the full URL
-        const fullImageUrl = `${window.location.origin}${response.data.image_url}`;
-        setCartoon(fullImageUrl);
+        // Use the image_url directly without modifying it
+        setCartoon(response.data.image_url);
         setConcept(response.data.caption);
       } else {
         setError('Unexpected response from server. Please try again.');
