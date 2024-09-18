@@ -13,11 +13,9 @@ const NewsFunApp = () => {
   useEffect(() => {
     const loadingMessages = [
       "5. Article is converted to discrete concepts....",
-      "4. COT creates a prompt...",
-      "3. Prompt is sent to Salvadar Dalle...",
-      "2. Dalle creates the strip...",
-      "1. RLHF approves the strip...",
-      "0. Here's your comic strip!"
+      "4. COT creates a prompt, sent to Salvadar Dalle...",
+      "2. Dalle creates the strip, RLHF approves...",
+      "1. Here's your comic strip!"
     ];
 
     const timeouts = [];
@@ -58,8 +56,9 @@ const NewsFunApp = () => {
       if (response.data.error) {
         setError(response.data.error);
       } else if (response.data.image_url) {
-        // Use the image_url directly without modifying it
-        setCartoon(response.data.image_url);
+        // Prepend the base URL to the image path
+        const baseUrl = process.env.REACT_APP_API_URL || '';
+        setCartoon(`${baseUrl}${response.data.image_url}`);
         setConcept(response.data.caption);
       } else {
         setError('Unexpected response from server. Please try again.');

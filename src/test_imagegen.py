@@ -7,7 +7,9 @@ from PIL import Image, ImageDraw, ImageFont
 import requests
 from io import BytesIO
 import time
-from flask import current_app
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -18,7 +20,7 @@ openai_api_key = os.getenv('OPENAI_API_KEY')
 if not openai_api_key:
     raise ValueError("No OpenAI API key found in environment variables")
 
-client = OpenAI(api_key=openai_api_key)
+client = OpenAI()
 
 # Generate image prompt
 def generate_image_prompt(refined_concept: str) -> str:
@@ -134,7 +136,7 @@ def generate_concept_and_caption(text: str):
 
 logger = logging.getLogger(__name__)
 
-font_path = os.path.join(current_app.root_path, 'assets', 'fonts', 'CaslonItalic.ttf')
+font_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'assets', 'fonts', 'CaslonItalic.ttf')
 
 def add_caption_to_image(image_url: str, caption: str, output_path: str):
     try:
@@ -196,7 +198,7 @@ def generate_cartoon(text: str) -> dict:
         if image_response:
             original_image_url = image_response['url']
             filename = f"final_cartoon_{int(time.time())}.png"
-            output_path = os.path.join(current_app.root_path, 'static', 'images', filename)
+            output_path = os.path.join(os.path.dirname(__file__), 'static', 'images', filename)
             
             # Add caption to the image
             add_caption_to_image(original_image_url, caption, output_path)
