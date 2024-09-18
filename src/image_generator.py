@@ -133,7 +133,7 @@ def generate_concept_and_caption(text: str):
 
 logger = logging.getLogger(__name__)
 
-font_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'fonts', 'CaslonItalic.ttf')
+font_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'assets', 'fonts', 'CaslonItalic.ttf')
 
 def add_caption_to_image(image_url: str, caption: str, output_path: str):
     try:
