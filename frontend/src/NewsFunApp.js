@@ -14,8 +14,8 @@ const NewsFunApp = () => {
     const loadingMessages = [
       "5. Article is converted to discrete concepts....",
       "4. COT creates a prompt...",
-      "3. Prompt is sent to Salvadar Dalle..."
-      "2. Dalle creates the strip..."
+      "3. Prompt is sent to Salvadar Dalle...",
+      "2. Dalle creates the strip...",
       "1. RLHF approves the strip...",
       "0. Here's your comic strip!"
     ];
@@ -55,11 +55,13 @@ const NewsFunApp = () => {
         }
       );
       console.log('API response:', response.data);
-      if (response.data.image_url) {
+      if (response.data.error) {
+        setError(response.data.error);
+      } else if (response.data.image_url) {
         setCartoon(response.data.image_url);
         setConcept(response.data.caption);
       } else {
-        setError('Failed to display. Please try again.');
+        setError('Unexpected response from server. Please try again.');
       }
     } catch (err) {
       console.error('Error generating cartoon:', err);
@@ -98,7 +100,6 @@ const NewsFunApp = () => {
             ) : 'Generate'}
           </button>
         </div>
-        {/* Box 2 Cartoon Display*/}
         <div className="w-full md:w-4/5 p-6 bg-gray-300 flex flex-col justify-between">
           <div className="flex-grow bg-white rounded flex items-center justify-center p-4">
             {isLoading ? (
