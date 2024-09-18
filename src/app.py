@@ -36,7 +36,7 @@ def generate_cartoon_route():
         if not article_text:
             return jsonify({"error": "No article text provided"}), 400
 
-        result = generate_cartoon(article_text)
+        result = generate_cartoon(article_text, app)
         # Make sure 'image_url' and 'caption' keys are present in the result
         if 'image_url' not in result or 'caption' not in result:
             return jsonify({"error": "Invalid response from image generator"}), 500

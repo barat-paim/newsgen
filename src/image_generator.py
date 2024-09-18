@@ -136,7 +136,7 @@ logger = logging.getLogger(__name__)
 
 font_path = os.path.join(current_app.root_path, 'assets', 'fonts', 'CaslonItalic.ttf')
 
-def add_caption_to_image(image_url: str, caption: str, output_path: str):
+def add_caption_to_image(image_url: str, caption: str, output_path: str, app):
     try:
         # Download the image
         response = requests.get(image_url)
@@ -154,8 +154,8 @@ def add_caption_to_image(image_url: str, caption: str, output_path: str):
         
         draw = ImageDraw.Draw(new_image)
         
-        with current_app.app_context():
-            font_path = os.path.join(current_app.root_path, 'assets', 'fonts', 'CaslonItalic.ttf')
+        with app.app_context():
+            font_path = os.path.join(app.root_path, 'assets', 'fonts', 'CaslonItalic.ttf')
         
         try:
             font = ImageFont.truetype(font_path, size=int(new_height * 0.03))  # Adjust size as needed
@@ -181,7 +181,7 @@ def add_caption_to_image(image_url: str, caption: str, output_path: str):
         logger.error(f"Error adding caption to image: {str(e)}")
 
 # Main function to generate the cartoon
-def generate_cartoon(text: str) -> dict:
+def generate_cartoon(text: str, app) -> dict:
     try:
         logger.debug(f"Generating cartoon for text: {text[:100]}...")
         
@@ -200,11 +200,11 @@ def generate_cartoon(text: str) -> dict:
             original_image_url = image_response['url']
             filename = f"final_cartoon_{int(time.time())}.png"
             
-            with current_app.app_context():
-                output_path = os.path.join(current_app.root_path, 'static', 'images', filename)
+            with app.app_context():
+                output_path = os.path.join(app.root_path, 'static', 'images', filename)
             
             # Add caption to the image
-            add_caption_to_image(original_image_url, caption, output_path)
+            add_caption_to_image(original_image_url, caption, output_path, app)
             
             # Return the URL path for the saved image
             return {
