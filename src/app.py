@@ -20,7 +20,9 @@ else:
 # Route to serve images (Place this route before the catch-all route)
 @app.route('/images/<path:filename>')
 def serve_image(filename):
-    return send_from_directory(os.path.join(current_app.root_path, 'static', 'images'), filename)
+    images_dir = os.path.join(current_app.root_path, '..', 'static', 'images')
+    app.logger.debug(f"Attempting to serve image from: {os.path.join(images_dir, filename)}")
+    return send_from_directory(images_dir, filename)
 
 # API route for generating cartoons
 @app.route('/api/generate_cartoon', methods=['POST', 'OPTIONS'])
