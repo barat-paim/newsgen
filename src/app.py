@@ -36,6 +36,8 @@ def generate_cartoon_route():
             return jsonify({"error": "No article text provided"}), 400
 
         result = generate_cartoon(article_text, app.root_path)
+        # add a debug statement to print the value of app.root_path
+        app.logger.debug(f"Root path: {app.root_path}")
         # Make sure 'image_url' and 'caption' keys are present in the result
         if 'image_url' not in result or 'caption' not in result:
             return jsonify({"error": "Invalid response from image generator"}), 500

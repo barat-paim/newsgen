@@ -168,7 +168,8 @@ def add_caption_to_image(image_url: str, caption: str, output_path: str, font_pa
         
         # Add text to image
         draw.text((x, y), f'"{caption}"', font=font, fill=(0, 0, 0, 255))
-        
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
         # Final image is saved at static/images/filename
         new_image.save(output_path) # save the image to the output path 
         logger.debug(f"Image saved with caption at: {output_path}")
@@ -179,6 +180,11 @@ def add_caption_to_image(image_url: str, caption: str, output_path: str, font_pa
 def generate_cartoon(text: str, app_root_path: str) -> dict:
     try:
         logger.debug(f"Generating cartoon for text: {text[:100]}...")
+        logger.debug(f"App root path: {app_root_path}")
+        
+        # Remove extra 'src' if present
+        if app_root_path.endswith('/src'):
+            app_root_path = os.path.dirname(app_root_path)
         
         concept, refined_concept, caption = generate_concept_and_caption(text)
         
@@ -190,14 +196,15 @@ def generate_cartoon(text: str, app_root_path: str) -> dict:
         logger.debug(f"Generated image prompt: {prompt}")
         
         image_response = generate_image(prompt)
-        # image_response is a dictionary with a url key
-        # url is created by openai
         if image_response:
             original_image_url = image_response['url'] 
             filename = f"final_cartoon_{int(time.time())}.png"
             output_path = os.path.join(app_root_path, 'static', 'images', filename)
-            font_path = os.path.join(app_root_path, 'assets', 'fonts', 'CaslonItalic.ttf')
-        
+            font_path = os.path.join(app_root_path, 'frontend', 'src', 'assets', 'fonts', 'CaslonItalic.ttf')
+            
+            logger.debug(f"Font path: {font_path}")
+            logger.debug(f"Output path: {output_path}")
+            
             # Add caption to the image
             add_caption_to_image(original_image_url, caption, output_path, font_path)
             
