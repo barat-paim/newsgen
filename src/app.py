@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 
 # Create Flask app and set up CORS
 app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
-app.root_path = os.path.dirname(os.path.abspath(__file__))
 
 # Set up CORS for all routes
 CORS(app)
@@ -36,7 +35,7 @@ def generate_cartoon_route():
         if not article_text:
             return jsonify({"error": "No article text provided"}), 400
 
-        result = generate_cartoon(article_text, app)
+        result = generate_cartoon(article_text, app.root_path)
         # Make sure 'image_url' and 'caption' keys are present in the result
         if 'image_url' not in result or 'caption' not in result:
             return jsonify({"error": "Invalid response from image generator"}), 500
@@ -49,7 +48,9 @@ def generate_cartoon_route():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
+    if path.startswith('api/') or path.startswith('images/'):
+        return make_response("Not Found", 404)
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
         response = make_response(send_from_directory(app.static_folder, path))
         response.headers['Cache-Control'] = 'public, max-age=31536000'
         return response

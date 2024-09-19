@@ -56,8 +56,6 @@ const NewsFunApp = () => {
       if (response.data.error) {
         setError(response.data.error);
       } else if (response.data.image_url) {
-        // Prepend the base URL to the image path
-        const baseUrl = process.env.REACT_APP_API_URL || '';
         setCartoon(`${baseUrl}${response.data.image_url}`);
         setConcept(response.data.caption);
       } else {

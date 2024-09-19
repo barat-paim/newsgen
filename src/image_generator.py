@@ -7,7 +7,6 @@ from PIL import Image, ImageDraw, ImageFont
 import requests
 from io import BytesIO
 import time
-from flask import current_app
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -134,9 +133,7 @@ def generate_concept_and_caption(text: str):
 
 logger = logging.getLogger(__name__)
 
-font_path = os.path.join(current_app.root_path, 'assets', 'fonts', 'CaslonItalic.ttf')
-
-def add_caption_to_image(image_url: str, caption: str, output_path: str, app):
+def add_caption_to_image(image_url: str, caption: str, output_path: str, font_path: str):
     try:
         # Download the image
         response = requests.get(image_url)
@@ -154,9 +151,7 @@ def add_caption_to_image(image_url: str, caption: str, output_path: str, app):
         
         draw = ImageDraw.Draw(new_image)
         
-        with app.app_context():
-            font_path = os.path.join(app.root_path, 'assets', 'fonts', 'CaslonItalic.ttf')
-        
+        # Construct the font path         
         try:
             font = ImageFont.truetype(font_path, size=int(new_height * 0.03))  # Adjust size as needed
             logger.debug(f"Loaded Caslon Italic font from {font_path}")
@@ -174,14 +169,14 @@ def add_caption_to_image(image_url: str, caption: str, output_path: str, app):
         # Add text to image
         draw.text((x, y), f'"{caption}"', font=font, fill=(0, 0, 0, 255))
         
-        # Save the edited image
-        new_image.save(output_path)
+        # Final image is saved at static/images/filename
+        new_image.save(output_path) # save the image to the output path 
         logger.debug(f"Image saved with caption at: {output_path}")
     except Exception as e:
         logger.error(f"Error adding caption to image: {str(e)}")
 
 # Main function to generate the cartoon
-def generate_cartoon(text: str, app) -> dict:
+def generate_cartoon(text: str, app_root_path: str) -> dict:
     try:
         logger.debug(f"Generating cartoon for text: {text[:100]}...")
         
@@ -195,16 +190,16 @@ def generate_cartoon(text: str, app) -> dict:
         logger.debug(f"Generated image prompt: {prompt}")
         
         image_response = generate_image(prompt)
-        
+        # image_response is a dictionary with a url key
+        # url is created by openai
         if image_response:
-            original_image_url = image_response['url']
+            original_image_url = image_response['url'] 
             filename = f"final_cartoon_{int(time.time())}.png"
-            
-            with app.app_context():
-                output_path = os.path.join(app.root_path, 'static', 'images', filename)
-            
+            output_path = os.path.join(app_root_path, 'static', 'images', filename)
+            font_path = os.path.join(app_root_path, 'assets', 'fonts', 'CaslonItalic.ttf')
+        
             # Add caption to the image
-            add_caption_to_image(original_image_url, caption, output_path, app)
+            add_caption_to_image(original_image_url, caption, output_path, font_path)
             
             # Return the URL path for the saved image
             return {
@@ -226,5 +221,6 @@ if __name__ == "__main__":
     concerns about privacy and data security. As AI becomes more ingrained in daily life, society must 
     navigate the benefits of increased efficiency and the risks of handing over control to machines.
     """
-    result = generate_cartoon(test_text)
+    app_root_path = os.path.dirname(os.path.abspath(__file__))
+    result = generate_cartoon(test_text, app_root_path)
     print(result)
