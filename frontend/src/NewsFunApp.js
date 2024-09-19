@@ -56,7 +56,7 @@ const NewsFunApp = () => {
       if (response.data.error) {
         setError(response.data.error);
       } else if (response.data.image_url) {
-        setCartoon(`${baseUrl}${response.data.image_url}`);
+        setCartoon(response.data.image_url);
         setConcept(response.data.caption);
       } else {
         setError('Unexpected response from server. Please try again.');
