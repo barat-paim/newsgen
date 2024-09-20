@@ -79,19 +79,18 @@ const NewsFunApp = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-black text-white">
-      <header className="p-2 flex items-center">
-        <ActivityIcon className="w-4 h-4 mr-2 text-gray-200" />
-        <h1 className="flex-grow text-4xl font-light italic text-center tracking-tight">
-          <span className="bg-gradient-to-r from-[#F9AD7C] to-[#61B59C] text-transparent bg-clip-text">make comics</span>
+    <div className="flex flex-col h-screen bg-neutral-950 text-white">
+      <header className="p-2 flex justify-left">
+        <h1 className="flex-grow mt-2 text-2xl text-gray-400 font-light tracking-tight pl-4">
+          <span className="font-semibold">Generative Strips</span>
         </h1>
       </header>
       
       <div className="flex flex-1 p-4 space-x-2">
-        <aside className="w-1/4 bg-black border border-gray-600 rounded-lg p-4 flex flex-col">
+        <aside className="w-1/4 bg-neutral-800 border border-black p-4 flex flex-col">
           <div className="flex-grow">
             <textarea 
-              className="w-full h-full p-2 rounded border border-black bg-transparent focus:border-gray-900 focus:outline-none" 
+              className="w-full h-full p-2 bg-transparent border border-neutral-700 rounded-xl pl-4 focus:border-gray-500 focus:outline-none" 
               placeholder="paste article text here..."
               value={articleText}
               onChange={(e) => setArticleText(e.target.value)}
@@ -141,7 +140,7 @@ const NewsFunApp = () => {
           </div>
         </aside>
         
-        <main className="flex-1 bg-black border border-gray-600 rounded-lg p-4">
+        <main className="flex-1 bg-neutral-900 border border-black p-4">
           {isLoading ? (
             <p className="text-gray-500">{loadingMessage}</p>
           ) : error ? (
