@@ -72,10 +72,9 @@ const NewsFunApp = () => {
   return (
     <div className="w-full mx-auto p-4 font-sans min-h-screen flex flex-col">
       <header className="p-4 relative">
-        <h1 className="text-4xl font-bold text-gray-700 text-center">
-          <span className="bg-black text-white px-1 py-0.5">make news fun</span>
+        <h1 className="text-8xl font-sans font-thin text-center tracking-tight">
+          <span className="bg-clip-text text-transparent bg-gradient-to-br from-yellow-400 via-blue-500 to-pink-500">strips</span>
         </h1>
-        <HelpCircle className="absolute top-4 right-4 text-gray-500 cursor-pointer" />
       </header>
       <div className="flex flex-col md:flex-row bg-gray-100 rounded-lg overflow-hidden w-full flex-grow">
         <div className="w-full md:w-1/5 p-6 bg-gray-200">
