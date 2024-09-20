@@ -140,19 +140,22 @@ const NewsFunApp = () => {
           </div>
         </aside>
         
-        <main className="flex-1 bg-neutral-900 border border-black p-4">
-          {isLoading ? (
-            <p className="text-gray-500">{loadingMessage}</p>
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
-          ) : cartoon ? (
-            <img src={cartoon} alt="Generated Cartoon" className="max-w-full max-h-full object-contain" />
-          ) : (
-            <div className="h-full flex items-center justify-center text-gray-500">
-              your comic strip will appear here...
-            </div>
-          )}
-          {concept && <p className="mt-2"><strong>Caption:</strong> {concept}</p>}
+        <main className="flex-1 bg-neutral-900 border border-black p-4 overflow-y-auto">
+          <div className="min-h-full flex flex-col items-center justify-center">
+            {isLoading ? (
+              <p className="text-gray-500">{loadingMessage}</p>
+            ) : error ? (
+              <p className="text-red-500">{error}</p>
+            ) : cartoon ? (
+              <div className="w-full">
+                <img src={cartoon} alt="Generated Cartoon" className="max-w-full h-auto" />
+              </div>
+            ) : (
+              <div className="text-gray-500">
+                your comic strip will appear here...
+              </div>
+            )}
+          </div>
         </main>
       </div>
     </div>
