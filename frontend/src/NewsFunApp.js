@@ -75,7 +75,6 @@ const NewsFunApp = () => {
         <h1 className="text-8xl font-sans font-thin text-gray-700 text-center tracking-tight">
           <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-violet-300 text-transparent bg-clip-text transform rotate-270">strips</span>
         </h1>
-        <HelpCircle className="absolute top-4 right-4 text-gray-500 cursor-pointer" />
       </header>
       <div className="flex flex-col md:flex-row bg-gray-100 rounded-lg overflow-hidden w-full flex-grow">
         <div className="w-full md:w-1/5 p-6 bg-gray-200">
