@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Share2, ThumbsUp, ThumbsDown, HelpCircle } from 'lucide-react';
+import { Share2, ThumbsUp, ThumbsDown, HelpCircle, Power, Lock, PowerSquareIcon, SwissFranc, RulerIcon, CarrotIcon, LucideCarrot, BoxesIcon, FrownIcon, PiIcon, DotIcon, CreativeCommonsIcon, ActivityIcon, SquareDotIcon, LucideMoveDiagonal2, CpuIcon, HazeIcon } from 'lucide-react';
+import { Switch } from './components/ui/switch';
+
+const VariantBox = ({ number }) => (
+  <div className="w-8 h-8 border border-gray-600 rounded flex items-center justify-center text-gray-400">
+    {number}
+  </div>
+);
 
 const NewsFunApp = () => {
   const [articleText, setArticleText] = useState('');
@@ -9,6 +16,8 @@ const NewsFunApp = () => {
   const [error, setError] = useState('');
   const [concept, setConcept] = useState('');
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [memoryEnabled, setMemoryEnabled] = useState(false);
 
   useEffect(() => {
     const loadingMessages = [
@@ -70,54 +79,82 @@ const NewsFunApp = () => {
   };
 
   return (
-    <div className="w-full mx-auto p-4 font-sans min-h-screen flex flex-col">
-      <header className="p-4 relative">
-        <h1 className="text-8xl font-sans font-thin text-gray-700 text-center tracking-tight">
-          <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-violet-300 text-transparent bg-clip-text transform rotate-270">strips</span>
+    <div className="flex flex-col h-screen bg-black text-white">
+      <header className="p-2 flex items-center">
+        <ActivityIcon className="w-4 h-4 mr-2 text-gray-200" />
+        <h1 className="flex-grow text-4xl font-light italic text-center tracking-tight">
+          <span className="bg-gradient-to-r from-[#F9AD7C] to-[#61B59C] text-transparent bg-clip-text">make comics</span>
         </h1>
       </header>
-      <div className="flex flex-col md:flex-row bg-gray-100 rounded-lg overflow-hidden w-full flex-grow">
-        <div className="w-full md:w-1/5 p-6 bg-gray-200">
-          <textarea 
-            className="w-full h-64 p-4 text-lg rounded border border-gray-300" 
-            placeholder="paste your article text here"
-            value={articleText}
-            onChange={(e) => setArticleText(e.target.value)}
-          />
+      
+      <div className="flex flex-1 p-4 space-x-2">
+        <aside className="w-1/4 bg-black border border-gray-600 rounded-lg p-4 flex flex-col">
+          <div className="flex-grow">
+            <textarea 
+              className="w-full h-full p-2 rounded border border-black bg-transparent focus:border-gray-900 focus:outline-none" 
+              placeholder="paste article text here..."
+              value={articleText}
+              onChange={(e) => setArticleText(e.target.value)}
+            />
+          </div>
           <button 
-            className="w-full mt-4 bg-black text-white py-2 px-2 rounded-full"
+            className="w-full p-2 mt-4 rounded-xl bg-gradient-to-r from-[#F9AD7C] via-[#F9C0F2] to-[#8DF9F9] text-black font-semibold text-xl text-center transition-all duration-300 hover:scale-105"
             onClick={generateCartoon}
             disabled={isLoading}
+            style={{ lineHeight: '1' }}
           >
-            {isLoading ? (
-              <div className="flex items-center justify-center">
-                <span className="mr-2">Generating...</span>
-                <div className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              </div>
-            ) : 'Generate'}
+            {isLoading ? 'creating...' : 'create'}
           </button>
-        </div>
-        <div className="w-full md:w-4/5 p-6 bg-gray-300 flex flex-col justify-between">
-          <div className="flex-grow bg-white rounded flex items-center justify-center p-4">
-            {isLoading ? (
-              <p className="text-gray-500">{loadingMessage}</p>
-            ) : error ? (
-              <p className="text-red-500">{error}</p>
-            ) : cartoon ? (
-              <img src={cartoon} alt="Generated Cartoon" className="max-w-full max-h-full object-contain" />
-            ) : (
-              <p className="text-gray-500">Your cartoon will appear here</p>
-            )}
-          </div>
-          {concept && <p className="mt-2"><strong>Caption:</strong> {concept}</p>}
-          <div className="flex justify-between items-center mt-4">
-            <div className="flex space-x-2">
-              <ThumbsUp className="cursor-pointer" />
-              <ThumbsDown className="cursor-pointer" />
+          
+          <div className="mt-6 pt-4 border-t border-gray-700">
+            <h2 className="text-sm font-semibold text-gray-400 mb-4 flex items-center">
+              <Lock className="w-4 h-4 mr-1" />
+              Beta Features
+            </h2>
+            <div className="space-y-4 opacity-50">
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Variants</label>
+                <div className="flex space-x-2">
+                  <VariantBox number={1} />
+                  <VariantBox number={2} />
+                  <VariantBox number={3} />
+                  <VariantBox number={4} />
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-gray-400">Character Voice</label>
+                <Switch 
+                  checked={voiceEnabled} 
+                  onCheckedChange={setVoiceEnabled}
+                  disabled
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-gray-400">Character Memory</label>
+                <Switch 
+                  checked={memoryEnabled} 
+                  onCheckedChange={setMemoryEnabled}
+                  disabled
+                />
+              </div>
             </div>
-            <Share2 className="cursor-pointer" />
           </div>
-        </div>
+        </aside>
+        
+        <main className="flex-1 bg-black border border-gray-600 rounded-lg p-4">
+          {isLoading ? (
+            <p className="text-gray-500">{loadingMessage}</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : cartoon ? (
+            <img src={cartoon} alt="Generated Cartoon" className="max-w-full max-h-full object-contain" />
+          ) : (
+            <div className="h-full flex items-center justify-center text-gray-500">
+              your comic strip will appear here...
+            </div>
+          )}
+          {concept && <p className="mt-2"><strong>Caption:</strong> {concept}</p>}
+        </main>
       </div>
     </div>
   );
