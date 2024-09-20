@@ -79,7 +79,7 @@ const NewsFunApp = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-neutral-950 text-white">
+    <div className="flex flex-col min-h-screen bg-neutral-950 text-white">
       <header className="p-2 flex justify-left">
         <h1 className="flex-grow mt-2 text-2xl text-gray-400 font-light tracking-tight pl-4">
           <span className="font-semibold">Generative Strips</span>

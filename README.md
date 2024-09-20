@@ -83,3 +83,37 @@ To set up the project environment:
    ```
    npm start
    ```
+
+## UI Components and Styling
+
+- Tailwind CSS for utility-first styling
+- Custom gradient styles for buttons and text
+- Responsive layout with sidebar and main content area
+- Custom Switch component for toggles
+- Loading states and error handling for API interactions
+
+## State Management
+
+- React hooks (useState, useEffect) for local state management
+
+## API Integration
+
+- Integration with backend API for cartoon generation
+
+## Installation and Setup
+
+1. Install dependencies:
+   ```
+   npm install tailwindcss lucide-react @radix-ui/react-switch
+   ```
+
+2. Configure Tailwind CSS (include configuration steps)
+
+3. Set up custom components (e.g., Switch component in `@/components/ui/switch.js`)
+
+## Development Guidelines
+
+- Use Tailwind CSS classes for styling
+- Implement loading states for asynchronous operations
+- Handle and display errors from API calls
+- Ensure accessibility in UI components
