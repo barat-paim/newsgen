@@ -72,8 +72,8 @@ const NewsFunApp = () => {
   return (
     <div className="w-full mx-auto p-4 font-sans min-h-screen flex flex-col">
       <header className="p-4 relative">
-        <h1 className="text-4xl font-bold text-gray-700 text-center">
-          <span className="bg-black text-white px-1 py-0.5">make news fun</span>
+        <h1 className="text-8xl font-sans font-thin text-gray-700 text-center tracking-tight">
+          <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-violet-300 text-transparent bg-clip-text transform rotate-270">strips</span>
         </h1>
         <HelpCircle className="absolute top-4 right-4 text-gray-500 cursor-pointer" />
       </header>
