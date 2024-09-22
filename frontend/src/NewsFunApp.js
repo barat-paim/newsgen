@@ -33,12 +33,12 @@ const NewsFunApp = () => {
       });
     } else {
       setLoadingMessage('');
-      }
+    }
   }, [isLoading]);
 
   const generateCartoon = async () => {
     setIsLoading(true);
-    setLoadingComplete(false);
+    setLoadComplete(false);
     setError('');
     setCartoon('');
     setConcept('');
@@ -68,14 +68,14 @@ const NewsFunApp = () => {
       setError('Failed to generate. Please try again.');
     } finally {
       setIsLoading(false);
-      setLoadingComplete(true);
+      setLoadComplete(true);
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-neutral-950 text-white">
       <header className="p-2 flex justify-left">
-        <h1 className="flex-grow mt-2 text-2xl text-gray-400 font-light tracking-tight pl-4">
+        <h1 className="flex-grow mt-2 text-2xl text-white font-light tracking-tight pl-4">
           <span className="font-semibold">Generative Strips</span>
         </h1>
       </header>
@@ -142,13 +142,13 @@ const NewsFunApp = () => {
         
         <main className="flex-1 bg-neutral-900 border border-black p-4 flex flex-col items-center justify-center">
           {isLoading ? (
-            <LoadingComponent loadComplete={() => setLoadingComplete(true)} />
+            <LoadingComponent loadComplete={() => setLoadComplete(true)} />
           ) : cartoon ? (
             <div className="w-full h-full flex flex-col items-center justify-center">
               <img 
                 src={cartoon} 
                 alt="Generated Cartoon" 
-                className="max-w-full max-h-[70vh] object-contain"
+                className="max-w-full max-h-full object-contain object-center"
               />
               {concept && <p className="mt-4 text-center"><strong>Caption:</strong> {concept}</p>}
             </div>
