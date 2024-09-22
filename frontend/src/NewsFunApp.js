@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Share2, ThumbsUp, ThumbsDown, HelpCircle, Power, Lock, PowerSquareIcon, SwissFranc, RulerIcon, CarrotIcon, LucideCarrot, BoxesIcon, FrownIcon, PiIcon, DotIcon, CreativeCommonsIcon, ActivityIcon, SquareDotIcon, LucideMoveDiagonal2, CpuIcon, HazeIcon } from 'lucide-react';
+import { Share2, ThumbsUp, ThumbsDown, HelpCircle, Star, Power, Lock, PowerSquareIcon, SwissFranc, RulerIcon, CarrotIcon, LucideCarrot, BoxesIcon, FrownIcon, PiIcon, DotIcon, CreativeCommonsIcon, ActivityIcon, SquareDotIcon, LucideMoveDiagonal2, CpuIcon, HazeIcon, Activity } from 'lucide-react';
 import { Switch } from './components/ui/switch';
+import { ClipLoader } from 'react-spinners';
 
 const VariantBox = ({ number }) => (
   <div className="w-8 h-8 border border-gray-600 rounded flex items-center justify-center text-gray-400">
@@ -18,31 +19,21 @@ const NewsFunApp = () => {
   const [loadingMessage, setLoadingMessage] = useState('');
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [memoryEnabled, setMemoryEnabled] = useState(false);
+  const [timeoutIds, setTimeoutIds] = useState([]);
 
   useEffect(() => {
-    const loadingMessages = [
-      "5. Article is converted to discrete concepts....",
-      "4. COT creates a prompt, sent to Salvadar Dalle...",
-      "2. Dalle creates the strip, RLHF approves...",
-      "1. Here's your comic strip!"
-    ];
-
-    const timeouts = [];
     if (isLoading) {
+      const loadingMessages = ['Loading...', 'Generating cartoon...'];
       loadingMessages.forEach((message, index) => {
         const timeout = setTimeout(() => {
           setLoadingMessage(message);
         }, index * 10000);
-        timeouts.push(timeout);
+        timeoutIds.push(timeout);
       });
     } else {
       setLoadingMessage('');
-    }
-
-    return () => {
-      timeouts.forEach(clearTimeout);
-    };
-  }, [isLoading]); // Removed loadingMessages from the dependency array
+      }
+  }, [isLoading]);
 
   const generateCartoon = async () => {
     setIsLoading(true);
@@ -86,11 +77,11 @@ const NewsFunApp = () => {
         </h1>
       </header>
       
-      <div className="flex flex-1 p-4 space-x-2">
-        <aside className="w-1/4 bg-neutral-800 border border-black p-4 flex flex-col">
+      <div className="flex flex-1 p-4">
+        <aside className="w-1/4 bg-neutral-700 border border-black p-4 flex flex-col">
           <div className="flex-grow">
             <textarea 
-              className="w-full h-full p-2 bg-transparent border border-neutral-700 rounded-xl pl-4 focus:border-gray-500 focus:outline-none" 
+              className="w-full h-full p-2 text-neutral-300 font-thin bg-transparent border border-neutral-700 rounded-xl pl-4 focus:border-gray-500 focus:outline-none" 
               placeholder="paste article text here..."
               value={articleText}
               onChange={(e) => setArticleText(e.target.value)}
@@ -102,7 +93,14 @@ const NewsFunApp = () => {
             disabled={isLoading}
             style={{ lineHeight: '1' }}
           >
-            {isLoading ? 'creating...' : 'create'}
+            {isLoading ? (
+              'creating...'
+            ) : (
+              <>
+                <Activity className="inline text-black w-5 h-5 mr-3" />
+                create
+              </>
+            )}
           </button>
           
           <div className="mt-6 pt-4 border-t border-gray-700">
@@ -110,9 +108,9 @@ const NewsFunApp = () => {
               <Lock className="w-4 h-4 mr-1" />
               Beta Features
             </h2>
-            <div className="space-y-4 opacity-50">
+            <div className="space-y-4 opacity-60">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Variants</label>
+                <label className="block text-sm font-medium text-white mb-2">Variants</label>
                 <div className="flex space-x-2">
                   <VariantBox number={1} />
                   <VariantBox number={2} />
@@ -121,7 +119,7 @@ const NewsFunApp = () => {
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-gray-400">Character Voice</label>
+                <label className="text-sm font-medium text-white">Character Voice</label>
                 <Switch 
                   checked={voiceEnabled} 
                   onCheckedChange={setVoiceEnabled}
@@ -129,7 +127,7 @@ const NewsFunApp = () => {
                 />
               </div>
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-gray-400">Character Memory</label>
+                <label className="text-sm font-medium text-white">Character Memory</label>
                 <Switch 
                   checked={memoryEnabled} 
                   onCheckedChange={setMemoryEnabled}
@@ -140,22 +138,24 @@ const NewsFunApp = () => {
           </div>
         </aside>
         
-        <main className="flex-1 bg-neutral-900 border border-black p-4 overflow-y-auto">
-          <div className="min-h-full flex flex-col items-center justify-center">
-            {isLoading ? (
-              <p className="text-gray-500">{loadingMessage}</p>
-            ) : error ? (
-              <p className="text-red-500">{error}</p>
-            ) : cartoon ? (
-              <div className="w-full">
-                <img src={cartoon} alt="Generated Cartoon" className="max-w-full h-auto" />
+        <main className="flex-1 bg-neutral-800 border border-black p-4 relative">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <ClipLoader color="#F9AD7C" loading={isLoading} size={50} />
+              <p className="mt-4 text-gray-500">Loading...</p>
+              <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-md"></div>
+              {/* Add your star or pixel animation here */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Star className="animate-pulse text-yellow-400 w-8 h-8" />
               </div>
-            ) : (
-              <div className="text-gray-500">
-                your comic strip will appear here...
-              </div>
-            )}
-          </div>
+            </div>
+          ) : cartoon ? (
+            <img src={cartoon} alt="Generated Cartoon" className="max-w-full h-auto" />
+          ) : (
+            <div className="h-full flex items-center justify-center text-gray-500">
+              your comic strip will appear here...
+            </div>
+          )}
         </main>
       </div>
     </div>
