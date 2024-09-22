@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Share2, ThumbsUp, ThumbsDown, HelpCircle, Star, Power, Lock, PowerSquareIcon, SwissFranc, RulerIcon, CarrotIcon, LucideCarrot, BoxesIcon, FrownIcon, PiIcon, DotIcon, CreativeCommonsIcon, ActivityIcon, SquareDotIcon, LucideMoveDiagonal2, CpuIcon, HazeIcon, Activity } from 'lucide-react';
 import { Switch } from './components/ui/switch';
-import { ClipLoader } from 'react-spinners';
+import LoadingComponent from './LoadingComponent';
 
 const VariantBox = ({ number }) => (
   <div className="w-8 h-8 border border-gray-600 rounded flex items-center justify-center text-gray-400">
@@ -20,6 +20,7 @@ const NewsFunApp = () => {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [memoryEnabled, setMemoryEnabled] = useState(false);
   const [timeoutIds, setTimeoutIds] = useState([]);
+  const [loadComplete, setLoadComplete] = useState(false);
 
   useEffect(() => {
     if (isLoading) {
@@ -37,6 +38,7 @@ const NewsFunApp = () => {
 
   const generateCartoon = async () => {
     setIsLoading(true);
+    setLoadingComplete(false);
     setError('');
     setCartoon('');
     setConcept('');
@@ -66,6 +68,7 @@ const NewsFunApp = () => {
       setError('Failed to generate. Please try again.');
     } finally {
       setIsLoading(false);
+      setLoadingComplete(true);
     }
   };
 
@@ -77,11 +80,11 @@ const NewsFunApp = () => {
         </h1>
       </header>
       
-      <div className="flex flex-col md:flex-row flex-1 p-4 space-y-4 md:space-y-0 md:space-x-2">
-        <aside className="w-full md:w-1/4 bg-neutral-700 border border-black p-4 flex flex-col">
+      <div className="flex flex-col md:flex-row flex-1 p-4 space-y-4 md:space-y-0 md:space-x-1">
+        <aside className="w-full md:w-1/4 bg-neutral-800 border border-black p-4 flex flex-col">
           <div className="flex-grow">
             <textarea 
-              className="w-full h-40 md:h-full p-2 bg-transparent border border-black text-neutral-400 rounded-xl pl-4 focus:border-gray-500 focus:outline-none" 
+              className="w-full h-40 md:h-full p-2 bg-transparent border border-gray-600 text-neutral-400 rounded-xl pl-4 focus:border-gray-500 focus:outline-none" 
               placeholder="paste article text here..."
               value={articleText}
               onChange={(e) => setArticleText(e.target.value)}
@@ -137,20 +140,23 @@ const NewsFunApp = () => {
           </div>
         </aside>
         
-        <main className="flex-1 bg-neutral-800 border border-black p-4 min-h-[300px]">
+        <main className="flex-1 bg-neutral-900 border border-black p-4 flex flex-col items-center justify-center">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center h-full">
-              <div className="loader"></div>
-              <p className="mt-4 text-gray-500">Loading...</p>
-            </div>
+            <LoadingComponent loadComplete={() => setLoadingComplete(true)} />
           ) : cartoon ? (
-            <img src={cartoon} alt="Generated Cartoon" className="max-w-full h-auto max-h-[300px] object-contain" />
+            <div className="w-full h-full flex flex-col items-center justify-center">
+              <img 
+                src={cartoon} 
+                alt="Generated Cartoon" 
+                className="max-w-full max-h-[70vh] object-contain"
+              />
+              {concept && <p className="mt-4 text-center"><strong>Caption:</strong> {concept}</p>}
+            </div>
           ) : (
             <div className="h-full flex items-center justify-center text-gray-500">
               your comic strip will appear here...
             </div>
           )}
-          {concept && <p className="mt-2"><strong>Caption:</strong> 'test'</p>}
         </main>
       </div>
     </div>
