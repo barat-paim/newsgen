@@ -77,11 +77,11 @@ const NewsFunApp = () => {
         </h1>
       </header>
       
-      <div className="flex flex-1 p-4">
-        <aside className="w-1/4 bg-neutral-700 border border-black p-4 flex flex-col">
+      <div className="flex flex-col md:flex-row flex-1 p-4 space-y-4 md:space-y-0 md:space-x-2">
+        <aside className="w-full md:w-1/4 bg-neutral-700 border border-black p-4 flex flex-col">
           <div className="flex-grow">
             <textarea 
-              className="w-full h-full p-2 text-neutral-300 font-thin bg-transparent border border-neutral-700 rounded-xl pl-4 focus:border-gray-500 focus:outline-none" 
+              className="w-full h-40 md:h-full p-2 bg-transparent border border-black text-neutral-400 rounded-xl pl-4 focus:border-gray-500 focus:outline-none" 
               placeholder="paste article text here..."
               value={articleText}
               onChange={(e) => setArticleText(e.target.value)}
@@ -93,16 +93,15 @@ const NewsFunApp = () => {
             disabled={isLoading}
             style={{ lineHeight: '1' }}
           >
-            {isLoading ? (
-              'creating...'
-            ) : (
+            {isLoading ? 'creating...' : (
               <>
-                <Activity className="inline text-black w-5 h-5 mr-3" />
+                <Activity className="inline w-4 h-4 mr-2" />
                 create
               </>
             )}
           </button>
           
+          {/* Beta Features section */}
           <div className="mt-6 pt-4 border-t border-gray-700">
             <h2 className="text-sm font-semibold text-gray-400 mb-4 flex items-center">
               <Lock className="w-4 h-4 mr-1" />
@@ -138,24 +137,20 @@ const NewsFunApp = () => {
           </div>
         </aside>
         
-        <main className="flex-1 bg-neutral-800 border border-black p-4 relative">
+        <main className="flex-1 bg-neutral-800 border border-black p-4 min-h-[300px]">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center h-full">
-              <ClipLoader color="#F9AD7C" loading={isLoading} size={50} />
+              <div className="loader"></div>
               <p className="mt-4 text-gray-500">Loading...</p>
-              <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-md"></div>
-              {/* Add your star or pixel animation here */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Star className="animate-pulse text-yellow-400 w-8 h-8" />
-              </div>
             </div>
           ) : cartoon ? (
-            <img src={cartoon} alt="Generated Cartoon" className="max-w-full h-auto" />
+            <img src={cartoon} alt="Generated Cartoon" className="max-w-full h-auto max-h-[300px] object-contain" />
           ) : (
             <div className="h-full flex items-center justify-center text-gray-500">
               your comic strip will appear here...
             </div>
           )}
+          {concept && <p className="mt-2"><strong>Caption:</strong> 'test'</p>}
         </main>
       </div>
     </div>
