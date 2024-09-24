@@ -21,3 +21,4 @@ services:
     install -r requirements.txt'
   startCommand: gunicorn --chdir src app:app
 version: "1"
+

@@ -4,6 +4,7 @@ from image_generator import generate_cartoon
 import logging
 import os
 from datetime import datetime, timedelta
+from audioGen import generate_news_audio
 
 # Create Flask app and set up CORS
 app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
@@ -47,6 +48,22 @@ def generate_cartoon_route():
     except Exception as e:
         app.logger.error(f"Error generating cartoon: {str(e)}")
         return jsonify({"error": "An error occurred while generating the cartoon"}), 500
+
+# API route for generating news audio
+@app.route('/api/generate_news_audio', methods=['POST'])
+def api_generate_news_audio():
+    data = request.json
+    article_text = data.get('article_text', '')
+    
+    if not article_text:
+        return jsonify({"error": "No article text provided"}), 400
+    
+    result = generate_news_audio(article_text)
+    
+    if "error" in result:
+        return jsonify(result), 500
+    
+    return jsonify(result)
 
 # Serve the frontend build (React app)
 @app.route('/', defaults={'path': ''})
